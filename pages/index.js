@@ -58,6 +58,11 @@ export default function Home({ instagramData }) {
   const posterContainer = useRef(null);
 
   function handleDownload() {
+    const scale =
+      window.innerHeight > window.innerWidth
+        ? 1440 / posterContainer.current.offsetWidth
+        : 1920 / posterContainer.current.offsetHeight;
+
     domtoimage
       .toBlob(posterContainer.current, {
         width: 1440,
@@ -65,7 +70,7 @@ export default function Home({ instagramData }) {
         style: {
           width: "1440px",
           height: "1920px",
-          transform: `scale(${1440 / posterContainer.current.offsetWidth})`,
+          transform: `scale(${scale})`,
           "transform-origin": "top left",
         },
       })
