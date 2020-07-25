@@ -125,6 +125,17 @@ export default function Home({ instagramData }) {
             <Spacer x={0.5} />
             <Download />
           </Button>
+          <Text size="small">
+            Para dispositivos iOS hay un pequeño{" "}
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://share.getcloudapp.com/v1uedkRA"
+              style={{ fontWeight: "bold" }}
+            >
+              truco
+            </Link>
+          </Text>
           <Card.Footer style={{ flexDirection: "column" }}>
             Una pequeña app hecha por{" "}
             <Link
