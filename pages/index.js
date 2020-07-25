@@ -64,7 +64,7 @@ export default function Home({ instagramData }) {
         : 1920 / posterContainer.current.offsetHeight;
 
     domtoimage
-      .toBlob(posterContainer.current, {
+      .toPng(posterContainer.current, {
         width: 1440,
         height: 1920,
         style: {
