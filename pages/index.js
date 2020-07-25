@@ -87,10 +87,10 @@ export default function Home({ instagramData }) {
         align="center"
         justify="center"
         style={{
-          marginTop: 30,
+          marginTop: 10,
           marginBottom: 30,
-          paddingTop: 30,
-          paddingBottom: 30,
+          paddingLeft: 30,
+          paddingRight: 30,
         }}
       >
         <Card shadow style={{ maxWidth: 400, minWidth: 200 }}>
