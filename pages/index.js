@@ -2,7 +2,6 @@ import { useRef } from "react";
 import Head from "next/head";
 import useSWR from "swr";
 import { Button, Spacer, Card, Col, Text, Link } from "@zeit-ui/react";
-import { scrapeUserPage } from "instagram-scraping";
 import { Download } from "@zeit-ui/react-icons";
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
@@ -21,8 +20,8 @@ function Gallery({ posterContainer, instagramData }) {
 
   return (
     <div className="gallery" ref={posterContainer}>
-      {data.medias.map((post) => (
-        <Post post={post} key={post.media_id} />
+      {data.map((post) => (
+        <Post post={post} key={post.id} />
       ))}
       <style jsx>{`
         .gallery {
@@ -38,16 +37,21 @@ function Gallery({ posterContainer, instagramData }) {
 function Post({ post }) {
   return (
     <img
-      src={post.thumbnail}
+      src={post.displayUrl}
       style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
     />
   );
 }
 
 export async function getServerSideProps() {
-  const data = await scrapeUserPage("festibbity");
-  const instagramData = JSON.stringify(data);
-  return { props: { instagramData: JSON.parse(instagramData) } };
+  const result = await fetch(
+    `https://www.instagram.com/graphql/query/?query_hash=15bf78a4ad24e33cbd838fdb31353ac1&variables={"id":"32191791554","first":12}`
+  );
+  const data = await result.json();
+  const instagramData = data.data.user.edge_owner_to_timeline_media.edges.map(
+    (element) => ({ id:element.node.id ,displayUrl: element.node.display_url })
+  );
+  return { props: { instagramData } };
 }
 
 export default function Home({ instagramData }) {
