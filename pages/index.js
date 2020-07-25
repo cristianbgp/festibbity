@@ -1,20 +1,11 @@
 import { useRef } from "react";
 import Head from "next/head";
 import useSWR from "swr";
-import {
-  Button,
-  Spacer,
-  Card,
-  Col,
-  Text,
-  Link,
-  Row,
-  Loading,
-} from "@zeit-ui/react";
+import { Button, Spacer, Card, Col, Text, Link } from "@zeit-ui/react";
+import { scrapeUserPage } from "instagram-scraping";
 import { Download } from "@zeit-ui/react-icons";
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
-import { SSRSuspense } from "../components/ssr-suspense";
 
 const IMAGE_SIZE = "calc(100vw / 3)";
 
@@ -23,8 +14,10 @@ async function fetcher(url) {
   return await res.json();
 }
 
-function Gallery({ posterContainer }) {
-  const { data } = useSWR("api/instagram-posts", fetcher, { suspense: true });
+function Gallery({ posterContainer, instagramData }) {
+  const { data } = useSWR("api/instagram-posts", fetcher, {
+    initialData: instagramData,
+  });
 
   return (
     <div className="gallery" ref={posterContainer}>
@@ -51,7 +44,13 @@ function Post({ post }) {
   );
 }
 
-export default function Home() {
+export async function getServerSideProps() {
+  const data = await scrapeUserPage("festibbity");
+  const instagramData = JSON.stringify(data);
+  return { props: { instagramData: JSON.parse(instagramData) } };
+}
+
+export default function Home({ instagramData }) {
   const posterContainer = useRef(null);
 
   function handleDownload() {
@@ -75,15 +74,10 @@ export default function Home() {
       </Head>
 
       <main>
-        <SSRSuspense
-          fallback={
-            <Row style={{ padding: 50 }}>
-              <Loading type="secondary" size="large" />
-            </Row>
-          }
-        >
-          <Gallery posterContainer={posterContainer} />
-        </SSRSuspense>
+        <Gallery
+          posterContainer={posterContainer}
+          instagramData={instagramData}
+        />
       </main>
       <Col
         align="center"
