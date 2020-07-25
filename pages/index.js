@@ -27,7 +27,7 @@ function Gallery({ posterContainer, instagramData }) {
         .gallery {
           max-width: 600px;
           display: grid;
-          grid-template-columns: repeat(3, calc(100vw / 3));
+          grid-template-columns: repeat(3, ${IMAGE_SIZE});
         }
       `}</style>
     </div>
@@ -49,7 +49,7 @@ export async function getServerSideProps() {
   );
   const data = await result.json();
   const instagramData = data.data.user.edge_owner_to_timeline_media.edges.map(
-    (element) => ({ id:element.node.id ,displayUrl: element.node.display_url })
+    (element) => ({ id: element.node.id, displayUrl: element.node.display_url })
   );
   return { props: { instagramData } };
 }
@@ -59,8 +59,17 @@ export default function Home({ instagramData }) {
 
   function handleDownload() {
     domtoimage
-      .toBlob(posterContainer.current, { quality: 1 })
-      .then(function (blob) {
+      .toBlob(posterContainer.current, {
+        width: 1440,
+        height: 1920,
+        style: {
+          width: "1440px",
+          height: "1920px",
+          transform: `scale(${1440 / posterContainer.current.offsetWidth})`,
+          "transform-origin": "top left",
+        },
+      })
+      .then((blob) => {
         saveAs(blob, "festibbity.png");
       });
   }
