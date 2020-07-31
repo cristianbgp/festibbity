@@ -38,7 +38,7 @@ function Post({ post }) {
   return (
     <img
       src={post.displayUrl}
-      style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+      style={{ height: IMAGE_SIZE, width: IMAGE_SIZE, objectFit: "cover" }}
     />
   );
 }
